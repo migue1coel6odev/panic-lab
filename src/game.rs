@@ -1,4 +1,4 @@
-use super::constants::{PIECE_VENT, PIECE_INVERT_COLOR, INVERT_COLOR, PIECE_INVERT_PATTERN, INVERT_PATTERN, PIECE_INVERT_SHAPE, INVERT_SHAPE};
+use crate::constants::{PIECE_VENT, PIECE_INVERT_COLOR, INVERT_COLOR, PIECE_INVERT_PATTERN, INVERT_PATTERN, PIECE_INVERT_SHAPE, INVERT_SHAPE, PIECE_BLUE_LAB, PIECE_RED_LAB, PIECE_YELLOW_LAB};
 
 pub struct PanicBoard {
     pub board: [u8; 25],
@@ -16,6 +16,9 @@ impl PanicBoard {
         }
     }
 
+    pub fn set_current_pos(&mut self, new_current_pos: usize) {
+        self.current_pos =  new_current_pos;
+    }
 
     pub fn check_amoeba_pos(&mut self) -> Result<usize, ()> {
         
@@ -28,6 +31,9 @@ impl PanicBoard {
                 PIECE_INVERT_COLOR => self.current_amoeba ^= INVERT_COLOR,
                 PIECE_INVERT_PATTERN => self.current_amoeba ^= INVERT_PATTERN,
                 PIECE_INVERT_SHAPE => self.current_amoeba ^= INVERT_SHAPE,
+                PIECE_BLUE_LAB => {}, 
+                PIECE_RED_LAB => {},
+                PIECE_YELLOW_LAB => {},
                 amoeba => {
                     if amoeba.eq(&self.current_amoeba) {
                         break;
