@@ -14,7 +14,6 @@ fn main() {
 
     let mut panic_board = PanicBoard::new(board);
 
-    // let result = panic_board.check_amoeba_pos(true, PIECE_YELLOW_LAB, TWO_EYED, STRIPES, ORANGE);
     let result = panic_board.check_amoeba_pos(false, PIECE_YELLOW_LAB, ONE_EYED, STRIPES, ORANGE);
 
     println!("Result: {result:#?}");

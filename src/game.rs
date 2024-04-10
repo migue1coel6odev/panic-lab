@@ -90,7 +90,6 @@ impl PanicBoard {
                     }
                 },
                 PIECE_YELLOW_LAB => {
-                    dbg!(initial_lab);
                     if initial_lab == PIECE_YELLOW_LAB {
                         break;
                     }
