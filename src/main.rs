@@ -1,4 +1,4 @@
-use crate::game::PanicBoard;
+use crate::{constants::{BLUE, ONE_EYED, ORANGE, PIECE_RED_LAB, PIECE_YELLOW_LAB, STRIPES, TWO_EYED}, game::PanicBoard};
 
 pub mod constants;
 pub mod game;
@@ -9,11 +9,8 @@ fn main() {
 
     let mut panic_board = PanicBoard::new(board);
 
-    panic_board.set_current_pos(9);
-    panic_board.set_current_amoeba(0b0000_0101);
-    panic_board.set_clockwise(false);
-
-    let result = panic_board.check_amoeba_pos();
+    // let result = panic_board.check_amoeba_pos(true, PIECE_YELLOW_LAB, TWO_EYED, STRIPES, ORANGE);
+    let result = panic_board.check_amoeba_pos(false, PIECE_YELLOW_LAB, ONE_EYED, STRIPES, ORANGE);
 
     println!("Result: {result:#?}");
 
