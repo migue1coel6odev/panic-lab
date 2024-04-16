@@ -1,4 +1,3 @@
-
 use crate::constants::{
     INVERT_COLOR, INVERT_PATTERN, INVERT_SHAPE, PIECE_BLUE_LAB, PIECE_INVERT_COLOR,
     PIECE_INVERT_PATTERN, PIECE_INVERT_SHAPE, PIECE_RED_LAB, PIECE_VENT, PIECE_YELLOW_LAB,
@@ -6,30 +5,33 @@ use crate::constants::{
 
 pub struct PanicBoard {
     pub board: [u8; 25],
-    
 }
 
 impl PanicBoard {
     pub fn new(board: [u8; 25]) -> PanicBoard {
-        PanicBoard {
-            board,
-        }
+        PanicBoard { board }
     }
 
-    pub fn check_amoeba_pos(&mut self, is_clockwise: bool, initial_lab: u8, prop1: u8, prop2: u8, prop3: u8) -> Result<usize, ()> {
+    pub fn check_amoeba_pos(
+        &mut self,
+        is_clockwise: bool,
+        initial_lab: u8,
+        prop1: u8,
+        prop2: u8,
+        prop3: u8,
+    ) -> Result<usize, ()> {
         let mut current_amoeba = PanicBoard::build_current_amoeba(prop1, prop2, prop3);
-        
-        
+
         let mut board = self.board;
         if is_clockwise == false {
             board.reverse();
         }
-        
+
         let mut current_pos: usize = PanicBoard::get_starting_pos(board, initial_lab);
         let mut count_mutations: u8 = 0;
         loop {
             match board[current_pos] {
-                PIECE_VENT => current_pos = self.get_next_vent(current_pos),
+                PIECE_VENT => current_pos = PanicBoard::get_next_vent(board, current_pos),
                 PIECE_INVERT_COLOR => {
                     count_mutations += 1;
                     current_amoeba ^= INVERT_COLOR
@@ -65,7 +67,7 @@ impl PanicBoard {
         Ok(current_pos)
     }
 
-    pub fn build_current_amoeba(prop1: u8, prop2: u8, prop3: u8) -> u8{
+    pub fn build_current_amoeba(prop1: u8, prop2: u8, prop3: u8) -> u8 {
         let mut amoeba = 0b0000_0000;
         amoeba ^= prop1;
         amoeba ^= prop2;
@@ -74,45 +76,19 @@ impl PanicBoard {
         amoeba
     }
 
-    fn get_starting_pos(board: [u8;25], initial_lab: u8) -> usize {
-        let mut index: usize = 0;
-
-        loop {
-            match board[index] {
-                PIECE_BLUE_LAB => {
-                    if initial_lab == PIECE_BLUE_LAB {
-                        break;
-                    }
-                },
-                PIECE_RED_LAB => {
-                    if initial_lab == PIECE_RED_LAB {
-                        break;
-                    }
-                },
-                PIECE_YELLOW_LAB => {
-                    if initial_lab == PIECE_YELLOW_LAB {
-                        break;
-                    }
-                },
-                _ => {}
-            }
-            index += 1;
-        }
-        
-        index
-
+    fn get_starting_pos(board: [u8; 25], initial_lab: u8) -> usize {
+        board
+            .iter()
+            .position(|x| *x == initial_lab)
+            .expect("This should never give an error. We should always be able to find the initial lab in the board!")
     }
 
-    fn get_next_vent(&self, current_pos: usize) -> usize {
-        let mut next_current_pos = current_pos + 1;
-
-        loop {
-            match self.board[next_current_pos] {
-                PIECE_VENT => break,
-                _ => next_current_pos += 1,
-            }
-        }
-
-        next_current_pos
+    fn get_next_vent(board: [u8; 25], current_pos: usize) -> usize {
+        board
+            .iter()
+            .skip(current_pos)
+            .cycle()
+            .position(|x| *x == PIECE_VENT)
+            .expect("This should never give an error. We should always be able to find a PIECE_VENT. Unless this is not working as it should and not cycling the array!")
     }
 }
